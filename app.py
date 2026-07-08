@@ -1,38 +1,51 @@
 import streamlit as st
 from groq import Groq
 
-st.set_page_config(page_title="Análisis de Cargos", layout="centered")
+# Configuración de la página
+st.set_page_config(page_title="Análisis de Cargos Inteligente", layout="centered")
 
-# --- UI Limpia ---
+# --- UI ---
 st.title("🏢 Análisis de Cargos Inteligente")
-st.markdown("Asistente de diseño organizacional.")
+st.markdown("Asistente experto de diseño organizacional.")
 
 with st.sidebar:
     st.header("Configuración")
     cargo = st.text_input("Nombre del cargo", placeholder="Ej: Analista de Riesgos")
-    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Talento Humano"])
+    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Riesgos", "Talento Humano"])
     btn_generar = st.button("Generar Análisis")
 
-# --- Lógica de IA (Directa) ---
+# --- Lógica de IA ---
 if btn_generar and cargo:
     api_key = st.secrets.get("GROQ_API_KEY")
-    client = Groq(api_key=api_key)
     
-    with st.spinner('Construyendo perfil estratégico...'):
-        try:
-            prompt = f"Analiza el cargo '{cargo}' en el área de '{area}'. Estructura: Misión, 3 funciones, 3 Hard Skills, 3 Soft Skills."
-            response = client.chat.completions.create(
-                messages=[{"role": "user", "content": prompt}],
-                model="llama-3.3-70b-versatile",
-            )
-            
-            # Resultado directo (sin expander)
-            st.success("¡Perfil generado con éxito!")
-            st.markdown("---")
-            st.markdown(response.choices[0].message.content)
+    if not api_key:
+        st.error("❌ Error: No se encontró la API Key en los 'Secrets' de Streamlit.")
+    else:
+        client = Groq(api_key=api_key)
+        
+        with st.spinner('Construyendo perfil estratégico...'):
+            try:
+                # Instrucción estricta para evitar relleno
+                prompt = f"""Actúa como experto en diseño organizacional. Analiza el cargo '{cargo}' en el área de '{area}'.
                 
-        except Exception as e:
-            st.error("Error al conectar con la IA. Por favor verifica tu API Key.")
+                REGLAS:
+                1. NO incluyas introducciones ni párrafos explicativos.
+                2. Empieza directamente con el título del cargo.
+                3. Estructura obligatoria: Misión, Funciones, Hard Skills, Soft Skills.
+                4. Usa un tono corporativo y directo."""
+                
+                response = client.chat.completions.create(
+                    messages=[{"role": "user", "content": prompt}],
+                    model="llama-3.3-70b-versatile",
+                )
+                
+                # Resultado limpio
+                st.success("¡Perfil generado con éxito!")
+                st.markdown("---")
+                st.markdown(response.choices[0].message.content)
+                
+            except Exception as e:
+                st.error(f"🚨 Error al conectar con la IA: {e}")
 
 st.divider()
-st.caption("Gestión del Talento Humano")
+st.caption("Gestión de Talento Humano")
