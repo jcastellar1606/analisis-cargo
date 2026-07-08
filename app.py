@@ -25,14 +25,15 @@ if btn_generar and cargo:
         
         with st.spinner('Construyendo perfil estratégico...'):
             try:
-                # Instrucción estricta para evitar relleno
+              # Instrucción para que use formato estético (Negritas y Encabezados)
                 prompt = f"""Actúa como experto en diseño organizacional. Analiza el cargo '{cargo}' en el área de '{area}'.
                 
-                REGLAS:
-                1. NO incluyas introducciones ni párrafos explicativos.
-                2. Empieza directamente con el título del cargo.
-                3. Estructura obligatoria: Misión, Funciones, Hard Skills, Soft Skills.
-                4. Usa un tono corporativo y directo."""
+                REGLAS DE FORMATO (Obligatorio para que se vea profesional):
+                1. Usa un H2 (#) para el título del cargo.
+                2. Usa H3 (###) para cada sección (Misión, Funciones, Hard Skills, Soft Skills).
+                3. Para la Misión, usa una línea de texto normal debajo del título.
+                4. Para las Funciones y Skills, usa una lista numerada (1.) o viñetas simples (-) pero asegúrate de que cada título de sección sea una línea separada.
+                5. NO incluyas introducciones ni rellenos. Ve directo al grano."""
                 
                 response = client.chat.completions.create(
                     messages=[{"role": "user", "content": prompt}],
