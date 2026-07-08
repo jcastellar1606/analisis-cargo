@@ -1,17 +1,17 @@
 import streamlit as st
 from groq import Groq
 
-st.set_page_config(page_title="JobArchitect SURA", layout="centered")
+st.set_page_config(page_title="Análisis de Cargos Inteligente", layout="centered")
 
 # --- UI Mejorada ---
-st.title("🏢 JobArchitect: Análisis de Cargos")
-st.markdown("### Bienvenido al asistente de diseño organizacional de SURA.")
+st.title("🏢 Análisis de Cargos Inteligente")
+st.markdown("### Bienvenido al asistente de diseño organizacional")
 st.info("Utiliza la barra lateral para definir el perfil que deseas estructurar.")
 
 with st.sidebar:
     st.header("Configuración")
     cargo = st.text_input("Nombre del cargo", placeholder="Ej: Analista de Riesgos")
-    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Riesgos", "Talento Humano"])
+    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Talento Humano"])
     btn_generar = st.button("🚀 Generar Análisis")
 
 # --- Lógica de IA ---
@@ -36,4 +36,4 @@ if btn_generar and cargo:
             st.error("Error al conectar con la IA. Por favor verifica tu API Key.")
 
 st.divider()
-st.caption("Desarrollado para SURA - Innovación Talento Humano")
+st.caption("Gestión del Talento Humano")
