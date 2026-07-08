@@ -11,7 +11,7 @@ st.markdown("Asistente experto de diseño organizacional.")
 with st.sidebar:
     st.header("Configuración")
     cargo = st.text_input("Nombre del cargo", placeholder="Ej: Analista de Riesgos")
-    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Riesgos", "Talento Humano"])
+    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Talento Humano"])
     btn_generar = st.button("Generar Análisis")
 
 # --- Lógica de IA ---
