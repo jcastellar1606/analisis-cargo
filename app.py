@@ -2,15 +2,15 @@ import streamlit as st
 import os
 from groq import Groq
 
-# Configuración de la página
-st.set_page_config(page_title="JobArchitect SURA", layout="wide")
-st.title("🏢 JobArchitect: Análisis de Cargos Inteligente")
+
+st.set_page_config(page_title="Análisis de Cargos Inteligente", layout="wide")
+st.title("🏢 Análisis de Cargos Inteligente")
 
 # 1. Configuración de la interfaz (Sidebar)
 with st.sidebar:
     st.header("Configuración del Cargo")
     cargo = st.text_input("Nombre del cargo")
-    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Riesgos", "Talento Humano"])
+    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Talento Humano"])
     generar = st.button("Generar Perfil con IA")
 
 # 2. Lógica del botón
@@ -38,4 +38,4 @@ if generar and cargo:
                 st.error(f"🚨 Error de conexión: {e}")
 
 st.divider()
-st.caption("Herramienta desarrollada para SURA - Desafío Talento 2024")
+
