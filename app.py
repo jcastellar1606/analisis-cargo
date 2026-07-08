@@ -2,23 +2,30 @@ import streamlit as st
 import os
 from groq import Groq
 
-# Aseguramos que la clave se lea desde los secrets
-api_key = st.secrets.get("GROQ_API_KEY")
+# 1. Configuración de la interfaz (Sidebar)
+with st.sidebar:
+    st.header("Configuración")
+    cargo = st.text_input("Nombre del cargo")
+    area = st.selectbox("Área", ["Seguros", "Tecnología", "Finanzas", "Riesgos"])
+    generar = st.button("Generar Perfil IA") # <--- AQUÍ se define 'generar'
 
-if not api_key:
-    st.error("No se encontró la API Key en los secretos. Por favor, configúrala en Streamlit.")
-else:
-    client = Groq(api_key=api_key)
+# 2. Título principal
+st.title("🏢 JobArchitect: Análisis de Cargos")
 
-    if generar and cargo:
-        with st.spinner('Generando perfil con IA...'):
+# 3. Lógica del botón (ahora 'generar' sí existe)
+if generar and cargo:
+    api_key = st.secrets.get("GROQ_API_KEY")
+    if not api_key:
+        st.error("Configura la GROQ_API_KEY en los Secrets.")
+    else:
+        client = Groq(api_key=api_key)
+        with st.spinner('Construyendo perfil...'):
             try:
-                prompt = f"Crea un análisis de cargo profesional para '{cargo}' en el área de '{area}'. Incluye Misión, 3 Funciones, 3 Hard Skills y 3 Soft Skills."
-                
+                prompt = f"Crea un perfil profesional para el cargo '{cargo}' en el área de '{area}'. Incluye Misión, 3 funciones, 3 hard skills y 3 soft skills."
                 chat_completion = client.chat.completions.create(
                     messages=[{"role": "user", "content": prompt}],
                     model="llama3-8b-8192",
                 )
                 st.markdown(chat_completion.choices[0].message.content)
             except Exception as e:
-                st.error(f"Ocurrió un error: {e}")
+                st.error(f"Error de conexión: {e}")
