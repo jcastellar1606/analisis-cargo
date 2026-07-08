@@ -29,8 +29,7 @@ if btn_generar and cargo:
             
             # --- Presentación con Expanders ---
             st.success("¡Perfil generado con éxito!")
-            with st.expander("Ver Análisis Completo", expanded=True):
-                st.markdown(response.choices[0].message.content)
+          
                 
         except Exception as e:
             st.error("Error al conectar con la IA. Por favor verifica tu API Key.")
