@@ -1,42 +1,43 @@
 import streamlit as st
+from openai import OpenAI
+
+# Configuración de OpenAI
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 st.set_page_config(page_title="JobArchitect SURA", layout="wide")
+st.title("🏢 JobArchitect: Análisis de Cargos Inteligente")
 
-st.title("🏢 JobArchitect: Análisis de Cargos - SURA")
-st.subheader("Herramienta automatizada para la gestión de talento")
-
-# Formulario de entrada
 with st.sidebar:
-    st.header("⚙️ Configurar nuevo cargo")
+    st.header("Configuración de Cargo")
     cargo = st.text_input("Nombre del cargo")
-    vicepresidencia = st.selectbox("Vicepresidencia", ["Seguros", "Innovación", "Financiero", "Talento Humano"])
-    objetivo = st.selectbox("Objetivo Estratégico", ["Transformación Digital", "Eficiencia Operativa", "Expansión de Mercado"])
-    generar = st.button("Generar Perfil Técnico")
-
-# Lógica de simulación
-if generar:
-    st.success(f"Perfil generado para: {cargo}")
-    col1, col2 = st.columns(2)
+    departamento = st.selectbox("Área / Departamento", 
+                                ["Seguros y Siniestros", "Innovación y Tecnología", 
+                                 "Gestión Financiera", "Talento y Cultura", "Riesgos Corporativos"])
     
-    with col1:
-        st.write("### 🎯 Misión del Cargo")
-        st.info(f"Gestionar la estrategia de {objetivo} desde la vicepresidencia de {vicepresidencia}...")
-        
-        st.write("### 📋 Funciones Principales")
-        st.write("- Análisis de datos y KPIs de desempeño.")
-        st.write("- Liderazgo en proyectos de mejora continua.")
-        st.write("- Alineación estratégica con los objetivos corporativos.")
+    objetivo = st.selectbox("Foco Estratégico", 
+                            ["Transformación Digital y Analítica", "Optimización de la Experiencia del Cliente", 
+                             "Crecimiento Sostenible y Mercado", "Eficiencia Operativa y Automatización"])
+    
+    generar = st.button("Generar Perfil con IA")
 
-    with col2:
-        st.write("### 🛠️ Perfil Requerido (Hard Skills)")
-        st.write("- Conocimientos avanzados en Excel y SQL.")
-        st.write("- Experiencia previa en el sector asegurador.")
-        st.write("- Certificación en metodologías ágiles.")
+if generar and cargo:
+    with st.spinner('Construyendo el perfil ideal...'):
+        prompt = f"""Crea un análisis de cargo profesional para el puesto de '{cargo}' 
+        dentro del departamento de '{departamento}'. 
+        El foco estratégico es: '{objetivo}'.
         
-        st.write("### 🧠 Competencias Blandas (Soft Skills)")
-        st.write("- Pensamiento analítico.")
-        st.write("- Comunicación asertiva.")
-        st.write("- Orientación a resultados.")
-
-st.divider()
-st.caption("Herramienta desarrollada para el equipo de Talento Humano - SURA | Competencia Etapa 1")
+        Por favor, entrega:
+        1. Misión del cargo (en una frase impactante).
+        2. Funciones principales (lista de 3 elementos).
+        3. Hard Skills (3 habilidades técnicas necesarias).
+        4. Soft Skills (3 competencias humanas clave).
+        """
+        
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        
+        st.markdown("---")
+        st.markdown(response.choices[0].message.content)
+        st.success("Perfil generado con éxito.")
